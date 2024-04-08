@@ -2,13 +2,47 @@ import mysql.connector
 
 connection = mysql.connector.connect(user = 'root', database = 'example', password = 'Kimura1074!')
 cursor = connection.cursor()
+#welcome
+print('Welcome to this real cool bank!')
 
-addData=("INSERT INTO guests (Name,Age,Height) VALUES (1001,18,5.0)")
-cursor.execute(addData)
-connection.commit()
+
+#ask for Account Number
+accNum= input('Please Enter Your Accout Number: ')
+
+#ask for accout PIN for that account number
+pinNum= input('Please Enter Your PIN: ')
+
+
+#menu
+# Check balance, withdrawl money, deposite money
+print('Choose an option from this menu')
+
+
+
+
+testQuery = ("SELECT Id FROM guests WHERE AccountNumber="+accNum)
+
+ 
+
+cursor.execute(testQuery)
+plsid=cursor.fetchone()
+
+#for item in cursor:
+
+    #print(item)
+
+ 
+print(plsid[0])
 cursor.close()
 
 connection.close()
+
+
+
+#addData=("INSERT INTO guests (Name,Age,Height) VALUES (1001,18,5.0)")
+#cursor.execute(addData)
+#connection.commit()
+
 
 
 #In this project you will create an online banking program. 
