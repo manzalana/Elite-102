@@ -1,1 +1,9 @@
-ddd
+
+HOW TO GET ONE VALUE FROM A ROW
+testQuery = ("SELECT Id FROM guests WHERE AccountNumber="+accNum)
+
+ 
+
+cursor.execute(testQuery)
+plsid=cursor.fetchone()
+VALUE=plsid[0] (or whatever row youre tryign to do)
