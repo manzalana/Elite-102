@@ -45,11 +45,24 @@ def getAccountNumber():
         #if PIN is Incorrect, this will run
         print('Incorrect PIN. Please re-enter your Account Number')
         getAccountNumber()
-    #testQuery = ("SELECT Id FROM guests WHERE AccountNumber="+accNum)
     
+    #Gets all of the Account Information for the account the user is accessing
+    accountInformationQuery=("SELECT * FROM guests WHERE AccountNumber="+accNum)
+    cursor.execute(accountInformationQuery)
+    accountInformation=cursor.fetchone()
+    print(accountInformation)
     #menu
     # Check balance, withdrawl money, deposite money
     print('Choose an option from this menu')
+    print('options')
+    userChoice=input()
+
+    #should be a while loop so like while user doesnt choose 4 this will run
+    while (userChoice !=4):
+        match (userChoice):
+            case 1:
+                print('this is a placeholder el o el')
+            
 
 
 
