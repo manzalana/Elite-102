@@ -5,6 +5,8 @@ cursor = connection.cursor()
 #welcome
 print('Welcome to this real cool bank!')
 
+#should probably ask if they have an account already or if they want to make a new account, then it can run
+
 def getAccountNumber():
     #ask for Account Number
     accNum= input('Please Enter Your Accout Number: ')
@@ -54,14 +56,21 @@ def getAccountNumber():
     #menu
     # Check balance, withdrawl money, deposite money
     print('Choose an option from this menu')
-    print('options')
-    userChoice=input()
-
+    print('1: Check Balance \n2: Deposit Money\n3: Withdrawl Money\n4: Exit')
+    userChoice=int(input())
+    print(userChoice)
     #should be a while loop so like while user doesnt choose 4 this will run
-    while (userChoice !=4):
-        match (userChoice):
+    while userChoice !=4:
+        match userChoice:
             case 1:
                 print('this is a placeholder el o el')
+            case 2:
+                print('choice 2')
+            case 3:
+                print ('choice 3')
+            case 4:
+                print('choice 4')
+        userChoice=int(input())
             
 
 
@@ -70,6 +79,18 @@ def getAccountNumber():
 
         #print(item)
 
+#checks the balance of the user's account
+def Check_Balance(account_info):
+    
+    pass
+
+#Withdraws money from their account
+def Withdraw_Money(account_info):
+    pass
+
+#deposits money into their account
+def Deposit_Money(account_info):
+    pass
     
    
     
