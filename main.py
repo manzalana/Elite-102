@@ -1,30 +1,49 @@
 import mysql.connector
 import os
-
+from time import sleep
 
 connection = mysql.connector.connect(user = 'root', database = 'example', password = 'Kimura1074!')
 cursor = connection.cursor()
 #welcome
-print('Welcome to this real cool bank!')
 
+
+def Display_Clear():
+    sleep(1)
+    os.system('cls')
+
+def Display_Seperator():
+    print()
+    print('------------------')
+    print()
 #should probably ask if they have an account already or if they want to make a new account, then it can run
 def Initial_Menu():
+    print('Welcome to this real cool bank!')
+    print()
     print('Do you have an account with us?')
 
     #lists possible options
     choices=['1','2']
+
+    #gets user input
     user_choice= input('1. Yes\n2. No\n')
+
+    #data validation
     if Input_Validation(user_choice,choices):
-        if user_choice ==1:
+        if user_choice =='1':
             getAccountNumber()
+            Display_Clear()
         else :
             pass
     else:
         print('Invalid Input')
+        #sleeps for 1 second, then clears the screen
+        
+        Display_Clear()
         Initial_Menu()
     
 #if the user has an account, this functions is meant to find their account
 def getAccountNumber():
+    Display_Clear()
     #ask for Account Number
     accNum= input('Please Enter Your Accout Number: ')
     accFound=False
@@ -33,25 +52,25 @@ def getAccountNumber():
     accNumValidationQuery=("SELECT AccountNumber FROM guests")
     cursor.execute(accNumValidationQuery)
     allAccNum=cursor.fetchall()
-    for accounts  in allAccNum:
-        #checks if the account number entered is in the system
-        if int(accounts[0]) ==int(accNum):
-            print(accounts[0])
-            #if it is found then this will run
-            accFound=True
-    #if there isnt an account found, the userLogin function will loop
-    if (accFound==False):
-        print('Account not Found. Please Try Again')
-        getAccountNumber()
     
 
+    #gets the account numbers
+    choices=[]
+    for accounts in allAccNum:
+        choices.append(f"{accounts[0]}")
+    
 
-    print('Account Found!')
+    if Input_Validation(accNum,choices):
+        print('Account Found!')
+        Display_Seperator()
+    else:
+        print('Account not found. Please Try Again')
+        
+        getAccountNumber()
     
 
     #ask for the pin number
     pinNum= input('Please Enter Your PIN: ')
-
     #get the correct PIN number
     pinQuery= ("SELECT Id FROM guests WHERE AccountNumber="+accNum)
     cursor.execute(pinQuery)
@@ -61,6 +80,7 @@ def getAccountNumber():
 
     if(int(pinNum)==int(userPin[0])):
         print('PIN Correct')
+        
     else:
         #if PIN is Incorrect, this will run
         print('Incorrect PIN. Please re-enter your Account Number')
@@ -75,14 +95,17 @@ def getAccountNumber():
                  
 
 def Actions_Menu(account_info):
+    
     userChoice=0
     choices=['1','2','3','4','5']
-    print(userChoice)
     #should be a while loop so like while user doesnt choose 4 this will run
     while userChoice !=5:
+        Display_Clear()
         print('Choose an option from this menu')
+        Display_Seperator()
         
-        userChoice=input('1: Check Balance \n2: Deposit Money\n3: Withdrawl Money\n4: Edit Account Information\n5: Finished')
+        
+        userChoice=input('1: Check Balance \n2: Deposit Money\n3: Withdrawl Money\n4: Edit Account Information\n5: Finished\n')
         #data validation
 
         #if data validation returns true, run the menu code and all of that, if false, ask user for input again
@@ -101,15 +124,15 @@ def Actions_Menu(account_info):
                     print('choice 4')
                 case 5:
                     print('Quit')
-            print('new choice')
-            userChoice=int(input())
+            
             #updates the user's information in the script after every loop to account for changes made
-            accountInformationQuery=("SELECT * FROM guests WHERE AccountNumber="+account_info[0])
+            accountInformationQuery=(f"SELECT * FROM guests WHERE AccountNumber={account_info[0]}")
             cursor.execute(accountInformationQuery)
             accountInformation=cursor.fetchone()
             print(accountInformation)
         else:
             print('Input Invalid')
+            
         
 
 
@@ -121,11 +144,13 @@ def Actions_Menu(account_info):
 
 #checks the balance of the user's account
 def Check_Balance(account_info):
+    Display_Clear()
     print(f"{account_info[3]} {account_info[2]}, your balance is currently ${account_info[4]}")
-    pass
+    sleep(4)
 
 #Withdraws money from their account
 def Withdraw_Money(account_info):
+    Display_Clear()
     #asks user how much they want to withdraw
     withdraw_amount=int(input('How much money do you want to withdraw? $'))
     #gets the amount currently in their account
@@ -154,6 +179,7 @@ def Withdraw_Money(account_info):
         
 #deposits money into their account
 def Deposit_Money(account_info):
+    Display_Clear()
     #gets the amount of money the user wants to deposit
     deposit_amount=int(input('How much money do you want to depoit into your account?'))
 
@@ -174,6 +200,7 @@ def Deposit_Money(account_info):
     print(f"Your balance is now {final_amount}")
 
 def Edit_Account_Info(account_info):
+    Display_Clear()
     print('What part of your account do you wish to edit?')
     
     user_choice=input('1. PIN\n2. Name\n3. Exit')
