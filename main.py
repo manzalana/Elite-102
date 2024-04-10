@@ -52,7 +52,6 @@ def getAccountNumber():
     accountInformationQuery=("SELECT * FROM guests WHERE AccountNumber="+accNum)
     cursor.execute(accountInformationQuery)
     accountInformation=cursor.fetchone()
-    print(accountInformation)
     #menu
     # Check balance, withdrawl money, deposite money
     print('Choose an option from this menu')
@@ -61,16 +60,24 @@ def getAccountNumber():
     print(userChoice)
     #should be a while loop so like while user doesnt choose 4 this will run
     while userChoice !=4:
+        
+        #menu from which the user will choose from
         match userChoice:
             case 1:
-                print('this is a placeholder el o el')
+                Check_Balance(accountInformation)
             case 2:
-                print('choice 2')
+                Deposit_Money(accountInformation)
             case 3:
-                print ('choice 3')
+                Withdraw_Money(accountInformation)
             case 4:
                 print('choice 4')
+        print('new choice')
         userChoice=int(input())
+        #updates the user's information in the script after every loop to account for changes made
+        accountInformationQuery=("SELECT * FROM guests WHERE AccountNumber="+accNum)
+        cursor.execute(accountInformationQuery)
+        accountInformation=cursor.fetchone()
+        print(accountInformation)
             
 
 
@@ -81,16 +88,59 @@ def getAccountNumber():
 
 #checks the balance of the user's account
 def Check_Balance(account_info):
-    
+    print(f"{account_info[3]} {account_info[2]}, your balance is currently ${account_info[4]}")
     pass
 
 #Withdraws money from their account
 def Withdraw_Money(account_info):
-    pass
+    #asks user how much they want to withdraw
+    withdraw_amount=int(input('How much money do you want to withdraw? $'))
+    #gets the amount currently in their account
+    amount_avaliable=int(account_info[4])
+    #place holder value for the final value after they withdraw
+    amount_final=0
+    
+    #if the amount they want to withdraw is more than their balance, they will have to choose a new amount to withdraw
+    if withdraw_amount>amount_avaliable:
+        print('You do not have the funds in your account to withdraw that amount of money. Please input another amount.')
+        Withdraw_Money(account_info)
+
+        #sets amount_final to the difference between amount avalible and the amount they are taking out
+    else:
+        amount_final=amount_avaliable-withdraw_amount
+        
+        #updates the sql table with the new amount in their balance
+        withdrawQuery=f"UPDATE guests SET Balance = {amount_final} WHERE AccountNumber={account_info[0]}"
+
+        #executes the command
+        cursor.execute(withdrawQuery)
+
+        #commits the changes to the table
+        connection.commit()
+        print(f"Your balance is now {amount_final}")
+        
+
 
 #deposits money into their account
 def Deposit_Money(account_info):
-    pass
+    #gets the amount of money the user wants to deposit
+    deposit_amount=int(input('How much money do you want to depoit into your account?'))
+
+    #gets the ammount of money currently in the account
+    initial_amount=int(account_info[4])
+
+    #gets the amount after depositing
+    final_amount=deposit_amount+initial_amount
+
+    #the sql query to update the balance with the new balance
+    depositQuery=f"UPDATE guests SET Balance= {final_amount} WHERE AccountNumber={account_info[0]}"
+
+    #executes the command
+    cursor.execute(depositQuery)
+    #commits the command
+    connection.commit()
+
+    print(f"Your balance is now {final_amount}")
     
    
     
