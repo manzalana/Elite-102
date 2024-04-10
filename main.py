@@ -1,5 +1,6 @@
 import mysql.connector
 import os
+import random
 from time import sleep
 
 connection = mysql.connector.connect(user = 'root', database = 'example', password = 'Kimura1074!')
@@ -24,7 +25,7 @@ def Initial_Menu():
     print('Do you have an account with us?')
 
     #lists possible options
-    choices=['1','2']
+    choices=['1','2','3']
 
     #gets user input
     user_choice= input('1. Yes\n2. No\n')
@@ -34,8 +35,10 @@ def Initial_Menu():
         if user_choice =='1':
             getAccountNumber()
             Display_Clear()
-        else :
-            pass
+        elif user_choice=='2' :
+            Create_Account()
+        else:
+            quit()
     else:
         print('Invalid Input')
         #sleeps for 1 second, then clears the screen
@@ -261,7 +264,30 @@ def Input_Validation(input, choices):
     else:
         return False
      
-   
+def Create_Account():
+    print('We are glad you\'ve decided to open an account with us!')
+    first_name=input('What is your first name?: ')
+    last_name=input('What is your last name?: ')
+    not_valid_data=True
+    #generates new user's account number
+    newAccNum= random.randint(1003,9999)
+    #validates the new user's PIN information
+    while not_valid_data:
+        not_valid_data=False
+        try:
+            pin=int(input('Please enter a 3 digit PIN: '))
+        except ValueError:
+            print('Invalid Input')
+            not_valid_data=True
+        if (len(str(pin)) !=3):
+                not_valid_data=True
+    #creates account for new user
+    addUserQuery=f"INSERT INTO guests(AccountNumber, Id, LastName, FirstName, Balance) VALUES({newAccNum},{pin},'"+last_name+"','"+first_name+"', 0.00)"
+    cursor.execute(addUserQuery)
+    connection.commit()
+    print(f"Your Account Number is {newAccNum}")
+    Initial_Menu()
+
     
 
 Initial_Menu()
