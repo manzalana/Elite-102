@@ -10,11 +10,15 @@ print('Welcome to this real cool bank!')
 #should probably ask if they have an account already or if they want to make a new account, then it can run
 def Initial_Menu():
     print('Do you have an account with us?')
-    user_choice= int(input('1. Yes\n2. No\n'))
-    if user_choice ==1:
-        getAccountNumber()
-    elif user_choice==2:
-        pass
+
+    #lists possible options
+    choices=['1','2']
+    user_choice= input('1. Yes\n2. No\n')
+    if Input_Validation(user_choice,choices):
+        if user_choice ==1:
+            getAccountNumber()
+        else :
+            pass
     else:
         print('Invalid Input')
         Initial_Menu()

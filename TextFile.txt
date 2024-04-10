@@ -6,4 +6,8 @@ testQuery = ("SELECT Id FROM guests WHERE AccountNumber="+accNum)
 
 cursor.execute(testQuery)
 plsid=cursor.fetchone()
-VALUE=plsid[0] (or whatever row youre tryign to do)
+VALUE=plsid[0] (or whatever colloum youre tryign to do)
+
+python code all menus i want and their number of options
+Have an account -2
+finding account number - the array of accounts
