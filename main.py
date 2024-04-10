@@ -6,6 +6,16 @@ cursor = connection.cursor()
 print('Welcome to this real cool bank!')
 
 #should probably ask if they have an account already or if they want to make a new account, then it can run
+def initialMenu():
+    print('Do you have an account with us?')
+    user_choice= int(input('1. Yes\n2. No\n'))
+    if user_choice ==1:
+        getAccountNumber()
+    elif user_choice==2:
+        pass
+    else:
+        print('Invalid Input')
+        initialMenu()
 
 def getAccountNumber():
     #ask for Account Number
@@ -145,8 +155,7 @@ def Deposit_Money(account_info):
    
     
 
-
-getAccountNumber()
+initialMenu()
 
 cursor.close()
 connection.close()
