@@ -1,4 +1,6 @@
 import mysql.connector
+import os
+
 
 connection = mysql.connector.connect(user = 'root', database = 'example', password = 'Kimura1074!')
 cursor = connection.cursor()
@@ -6,7 +8,7 @@ cursor = connection.cursor()
 print('Welcome to this real cool bank!')
 
 #should probably ask if they have an account already or if they want to make a new account, then it can run
-def initialMenu():
+def Initial_Menu():
     print('Do you have an account with us?')
     user_choice= int(input('1. Yes\n2. No\n'))
     if user_choice ==1:
@@ -15,8 +17,9 @@ def initialMenu():
         pass
     else:
         print('Invalid Input')
-        initialMenu()
-
+        Initial_Menu()
+    
+#if the user has an account, this functions is meant to find their account
 def getAccountNumber():
     #ask for Account Number
     accNum= input('Please Enter Your Accout Number: ')
@@ -27,7 +30,6 @@ def getAccountNumber():
     cursor.execute(accNumValidationQuery)
     allAccNum=cursor.fetchall()
     for accounts  in allAccNum:
-        
         #checks if the account number entered is in the system
         if int(accounts[0]) ==int(accNum):
             print(accounts[0])
@@ -38,6 +40,8 @@ def getAccountNumber():
         print('Account not Found. Please Try Again')
         getAccountNumber()
     
+
+
     print('Account Found!')
     
 
@@ -63,32 +67,47 @@ def getAccountNumber():
     cursor.execute(accountInformationQuery)
     accountInformation=cursor.fetchone()
     #menu
-    # Check balance, withdrawl money, deposite money
-    print('Choose an option from this menu')
-    print('1: Check Balance \n2: Deposit Money\n3: Withdrawl Money\n4: Exit')
-    userChoice=int(input())
+    Actions_Menu(accountInformation)
+                 
+
+def Actions_Menu(account_info):
+    userChoice=0
+    choices=['1','2','3','4','5']
     print(userChoice)
     #should be a while loop so like while user doesnt choose 4 this will run
-    while userChoice !=4:
+    while userChoice !=5:
+        print('Choose an option from this menu')
         
+        userChoice=input('1: Check Balance \n2: Deposit Money\n3: Withdrawl Money\n4: Edit Account Information\n5: Finished')
+        #data validation
+
+        #if data validation returns true, run the menu code and all of that, if false, ask user for input again
+        if Input_Validation(userChoice, choices):
+            userChoice=int(userChoice)
+
         #menu from which the user will choose from
-        match userChoice:
-            case 1:
-                Check_Balance(accountInformation)
-            case 2:
-                Deposit_Money(accountInformation)
-            case 3:
-                Withdraw_Money(accountInformation)
-            case 4:
-                print('choice 4')
-        print('new choice')
-        userChoice=int(input())
-        #updates the user's information in the script after every loop to account for changes made
-        accountInformationQuery=("SELECT * FROM guests WHERE AccountNumber="+accNum)
-        cursor.execute(accountInformationQuery)
-        accountInformation=cursor.fetchone()
-        print(accountInformation)
-            
+            match userChoice:
+                case 1:
+                    Check_Balance(account_info)
+                case 2:
+                    Deposit_Money(account_info)
+                case 3:
+                    Withdraw_Money(account_info)
+                case 4:
+                    print('choice 4')
+                case 5:
+                    print('Quit')
+            print('new choice')
+            userChoice=int(input())
+            #updates the user's information in the script after every loop to account for changes made
+            accountInformationQuery=("SELECT * FROM guests WHERE AccountNumber="+account_info[0])
+            cursor.execute(accountInformationQuery)
+            accountInformation=cursor.fetchone()
+            print(accountInformation)
+        else:
+            print('Input Invalid')
+        
+
 
 
 
@@ -129,8 +148,6 @@ def Withdraw_Money(account_info):
         connection.commit()
         print(f"Your balance is now {amount_final}")
         
-
-
 #deposits money into their account
 def Deposit_Money(account_info):
     #gets the amount of money the user wants to deposit
@@ -151,11 +168,32 @@ def Deposit_Money(account_info):
     connection.commit()
 
     print(f"Your balance is now {final_amount}")
+
+def Edit_Account_Info(account_info):
+    print('What part of your account do you wish to edit?')
     
+    user_choice=input('1. PIN\n2. Name\n3. Exit')
+
+    #data validation
+    
+    match user_choice:
+        case 1:
+            pass
+        case 2:
+            pass
+        case 3:
+            pass
+
+def Input_Validation(input, choices):
+    if input in choices:
+        return True
+    else:
+        return False
+     
    
     
 
-initialMenu()
+Initial_Menu()
 
 cursor.close()
 connection.close()
