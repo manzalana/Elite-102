@@ -9,7 +9,9 @@ cursor = connection.cursor()
 
 def Display_Clear():
     sleep(1)
-    os.system('cls')
+    print(' THIS IS WHERE A CLEAR WOULD BE!!!')
+    print()
+    #os.system('cls')
 
 def Display_Seperator():
     print()
@@ -103,7 +105,10 @@ def Actions_Menu(account_info):
         Display_Clear()
         print('Choose an option from this menu')
         Display_Seperator()
-        
+        accountInformationQuery=(f"SELECT * FROM guests WHERE AccountNumber={account_info[0]}")
+        cursor.execute(accountInformationQuery)
+        accountInformation=cursor.fetchone()
+        print(accountInformation)
         
         userChoice=input('1: Check Balance \n2: Deposit Money\n3: Withdrawl Money\n4: Edit Account Information\n5: Finished\n')
         #data validation
@@ -121,15 +126,12 @@ def Actions_Menu(account_info):
                 case 3:
                     Withdraw_Money(account_info)
                 case 4:
-                    print('choice 4')
+                    Edit_Account_Info(account_info)
                 case 5:
                     print('Quit')
             
             #updates the user's information in the script after every loop to account for changes made
-            accountInformationQuery=(f"SELECT * FROM guests WHERE AccountNumber={account_info[0]}")
-            cursor.execute(accountInformationQuery)
-            accountInformation=cursor.fetchone()
-            print(accountInformation)
+            
         else:
             print('Input Invalid')
             
@@ -150,17 +152,32 @@ def Check_Balance(account_info):
 
 #Withdraws money from their account
 def Withdraw_Money(account_info):
-    Display_Clear()
-    #asks user how much they want to withdraw
-    withdraw_amount=int(input('How much money do you want to withdraw? $'))
+    
+    #data validation to check if user is entering an Integer
+    dataValid=False
+    
+    while(dataValid==False):
+        Display_Clear()
+        #each time this loops data valid is set to true
+        dataValid=True
+    #data validation
+        try:
+            #asks user how much they want to withdraw
+            withdraw_amount=round(float(input('How much money do you want to withdraw? $')),2)
+            
+        except ValueError:
+            print('Invalid Input. Please Input a number value')
+            #will continue to loop if data isnt valid
+            dataValid=False
+    
     #gets the amount currently in their account
-    amount_avaliable=int(account_info[4])
+    amount_avaliable=float(account_info[4])
     #place holder value for the final value after they withdraw
     amount_final=0
     
     #if the amount they want to withdraw is more than their balance, they will have to choose a new amount to withdraw
     if withdraw_amount>amount_avaliable:
-        print('You do not have the funds in your account to withdraw that amount of money. Please input another amount.')
+        print(f"You do not have the funds in your account to withdraw ${withdraw_amount}. Please input another amount.")
         Withdraw_Money(account_info)
 
         #sets amount_final to the difference between amount avalible and the amount they are taking out
@@ -181,10 +198,18 @@ def Withdraw_Money(account_info):
 def Deposit_Money(account_info):
     Display_Clear()
     #gets the amount of money the user wants to deposit
-    deposit_amount=int(input('How much money do you want to depoit into your account?'))
+    dataValid=False
+    while dataValid==False:
+        dataValid=True
+        Display_Clear()
+        try:
+            deposit_amount=round(float(input('How much money do you want to depoit into your account?')),2)
+        except ValueError:
+            print('You did nto enter a valid amount. Please try again')
+            dataValid=False
 
     #gets the ammount of money currently in the account
-    initial_amount=int(account_info[4])
+    initial_amount=float(account_info[4])
 
     #gets the amount after depositing
     final_amount=deposit_amount+initial_amount
@@ -203,17 +228,32 @@ def Edit_Account_Info(account_info):
     Display_Clear()
     print('What part of your account do you wish to edit?')
     
-    user_choice=input('1. PIN\n2. Name\n3. Exit')
+    user_choice=input('1. PIN\n2. Name\n3. Exit to Menu')
+    choices=['1','2','3']
 
     #data validation
+    if Input_Validation(user_choice,choices):
     
-    match user_choice:
-        case 1:
-            pass
-        case 2:
-            pass
-        case 3:
-            pass
+        match user_choice:
+            case '1':
+                pass
+                
+            case '2':
+
+                #gets new first name
+                first_name=input('Please Enter your new First Name\n')
+                #gets new last name
+                last_name=input('Please Enter your new Last Name\n ')
+                #queries
+                newFNameQuery='UPDATE guests SET FirstName= \''+first_name+f"\' WHERE AccountNumber={account_info[0]}"
+                newLNameQuery='UPDATE guests SET LastName= \''+last_name+f"\' WHERE AccountNumber={account_info[0]}"
+                
+                print(newFNameQuery)
+                cursor.execute(newFNameQuery)
+                cursor.execute(newLNameQuery)
+                connection.commit()
+            case '3':
+                Actions_Menu(account_info)
 
 def Input_Validation(input, choices):
     if input in choices:
