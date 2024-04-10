@@ -28,7 +28,7 @@ def Initial_Menu():
     choices=['1','2','3']
 
     #gets user input
-    user_choice= input('1. Yes\n2. No\n')
+    user_choice= input('1. Yes\n2. I want to Create an Account!\n3. Exit\n')
 
     #data validation
     if Input_Validation(user_choice,choices):
@@ -113,7 +113,7 @@ def Actions_Menu(account_info):
         accountInformation=cursor.fetchone()
         print(accountInformation)
         
-        userChoice=input('1: Check Balance \n2: Deposit Money\n3: Withdrawl Money\n4: Edit Account Information\n5: Finished\n')
+        userChoice=input('1: Check Balance \n2: Deposit Money\n3: Withdrawl Money\n4: Edit Account Information\n5: Back to Main Menu\n')
         #data validation
 
         #if data validation returns true, run the menu code and all of that, if false, ask user for input again
@@ -123,15 +123,15 @@ def Actions_Menu(account_info):
         #menu from which the user will choose from
             match userChoice:
                 case 1:
-                    Check_Balance(account_info)
+                    Check_Balance(accountInformation)
                 case 2:
-                    Deposit_Money(account_info)
+                    Deposit_Money(accountInformation)
                 case 3:
-                    Withdraw_Money(account_info)
+                    Withdraw_Money(accountInformation)
                 case 4:
-                    Edit_Account_Info(account_info)
+                    Edit_Account_Info(accountInformation)
                 case 5:
-                    print('Quit')
+                    Initial_Menu()
             
             #updates the user's information in the script after every loop to account for changes made
             
@@ -175,6 +175,7 @@ def Withdraw_Money(account_info):
     
     #gets the amount currently in their account
     amount_avaliable=float(account_info[4])
+    print(f"avaliable: {account_info[4]}")
     #place holder value for the final value after they withdraw
     amount_final=0
     
@@ -286,6 +287,7 @@ def Create_Account():
     cursor.execute(addUserQuery)
     connection.commit()
     print(f"Your Account Number is {newAccNum}")
+    sleep(2)
     Initial_Menu()
 
     
