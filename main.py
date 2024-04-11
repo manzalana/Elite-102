@@ -123,11 +123,11 @@ def Actions_Menu(account_info):
         Display_Seperator()
         print('Action Menu')
         Display_Seperator()
-        print(f"Hello, {account_info[3]} {account_info[2]}" )
+        #gets the information from the table and updates it
         accountInformationQuery=(f"SELECT * FROM guests WHERE AccountNumber={account_info[0]}")
         cursor.execute(accountInformationQuery)
         accountInformation=cursor.fetchone()
-        
+        print(f"Hello, {accountInformation[3]} {accountInformation[2]}" )
         
         userChoice=input('1: Check Balance \n2: Deposit Money\n3: Withdrawl Money\n4: Edit Account Information\n5: Back to Main Menu\n')
         #data validation
@@ -188,8 +188,8 @@ def Withdraw_Money(account_info):
         dataValid=True
     #data validation
         try:
-            #asks user how much they want to withdraw
-            withdraw_amount=round(float(input('How much money do you want to withdraw? $')),2)
+            #asks user how much they want to withdraw, tries to convert it to a positive float value with 2 decimal places
+            withdraw_amount=abs(round(float(input('How much money do you want to withdraw? $')),2))
             
         except ValueError:
             print('Invalid Input. Please Input a number value')
@@ -233,7 +233,8 @@ def Deposit_Money(account_info):
         print('Deposit Money')
         Display_Seperator()
         try:
-            deposit_amount=round(float(input('How much money do you want to deposit into your account?')),2)
+            #tries to take user input as a float, rounds it to 2 decimal places then takes the absolute value of it
+            deposit_amount=abs(round(float(input('How much money do you want to deposit into your account?')),2))
         except ValueError:
             print('Invalid Input. Please try again')
 
