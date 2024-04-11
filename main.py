@@ -123,19 +123,15 @@ def Actions_Menu(account_info):
         Display_Seperator()
         print('Action Menu')
         Display_Seperator()
-        print(f"Hello, {account_info[3]} {account_info[2]}" )
         accountInformationQuery=(f"SELECT * FROM guests WHERE AccountNumber={account_info[0]}")
         cursor.execute(accountInformationQuery)
         accountInformation=cursor.fetchone()
-        
-        
+        print(f"Hello, {account_info[3]} {account_info[2]}")
         userChoice=input('1: Check Balance \n2: Deposit Money\n3: Withdrawl Money\n4: Edit Account Information\n5: Back to Main Menu\n')
         #data validation
-
         #if data validation returns true, run the menu code and all of that, if false, ask user for input again
         if Input_Validation(userChoice, choices):
             userChoice=int(userChoice)
-
         #menu from which the user will choose from
             match userChoice:
                 case 1:
@@ -149,16 +145,9 @@ def Actions_Menu(account_info):
                 case 5:
                     Display_Clear()
                     Initial_Menu()
-            
             #updates the user's information in the script after every loop to account for changes made
-            
         else:
-            print('Input Invalid')
-            
-        
-
-
-
+            print('Input Invalid') 
 
     #for item in cursor:
 
@@ -186,16 +175,15 @@ def Withdraw_Money(account_info):
         Display_Seperator()
         #each time this loops data valid is set to true
         dataValid=True
+
     #data validation
         try:
             #asks user how much they want to withdraw
-            withdraw_amount=round(float(input('How much money do you want to withdraw? $')),2)
-            
+            withdraw_amount=abs(round(float(input('How much money do you want to withdraw? $')),2))
         except ValueError:
             print('Invalid Input. Please Input a number value')
             #will continue to loop if data isnt valid
             dataValid=False
-    
     #gets the amount currently in their account
     amount_avaliable=float(account_info[4])
     print(f"Balance: ${account_info[4]}")
@@ -206,18 +194,14 @@ def Withdraw_Money(account_info):
     if withdraw_amount>amount_avaliable:
         print(f"You do not have the funds in your account to withdraw ${withdraw_amount}. Please input another amount.")
         Withdraw_Money(account_info)
-
         #sets amount_final to the difference between amount avalible and the amount they are taking out
     else:
         print(f"Withdrawing: ${withdraw_amount}")
         amount_final=amount_avaliable-withdraw_amount
-        
         #updates the sql table with the new amount in their balance
         withdrawQuery=f"UPDATE guests SET Balance = {round(amount_final,2)} WHERE AccountNumber={account_info[0]}"
-
         #executes the command
         cursor.execute(withdrawQuery)
-
         #commits the changes to the table
         connection.commit()
         print(f"Your balance is now ${amount_final}")
@@ -233,7 +217,7 @@ def Deposit_Money(account_info):
         print('Deposit Money')
         Display_Seperator()
         try:
-            deposit_amount=round(float(input('How much money do you want to deposit into your account?')),2)
+            deposit_amount=abs(round(float(input('How much money do you want to deposit into your account?')),2))
         except ValueError:
             print('Invalid Input. Please try again')
 
@@ -295,7 +279,7 @@ def Edit_Account_Info(account_info):
                 newFNameQuery='UPDATE guests SET FirstName= \''+first_name+f"\' WHERE AccountNumber={account_info[0]}"
                 newLNameQuery='UPDATE guests SET LastName= \''+last_name+f"\' WHERE AccountNumber={account_info[0]}"
                 
-                print(newFNameQuery)
+                
                 cursor.execute(newFNameQuery)
                 cursor.execute(newLNameQuery)
                 connection.commit()
