@@ -126,7 +126,7 @@ def Actions_Menu(account_info):
         accountInformationQuery=(f"SELECT * FROM guests WHERE AccountNumber={account_info[0]}")
         cursor.execute(accountInformationQuery)
         accountInformation=cursor.fetchone()
-        print(f"Hello, {account_info[3]} {account_info[2]}")
+        print(f"Hello, {accountInformation[3]} {accountInformation[2]}")
         userChoice=input('1: Check Balance \n2: Deposit Money\n3: Withdrawl Money\n4: Edit Account Information\n5: Back to Main Menu\n')
         #data validation
         #if data validation returns true, run the menu code and all of that, if false, ask user for input again
@@ -255,6 +255,7 @@ def Edit_Account_Info(account_info):
     
         match user_choice:
             case '1':
+                not_valid_data=True
                 while not_valid_data:
                     not_valid_data=False
                     try:
